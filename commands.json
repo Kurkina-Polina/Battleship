@@ -1,0 +1,8 @@
+{
+    "g": "game_start",
+    "s": "save",
+    "l": "load",
+    "e": "end",
+    "a": "attack",
+    "u": "use_ability"
+}
