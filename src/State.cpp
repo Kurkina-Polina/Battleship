@@ -16,7 +16,6 @@
 
 int GameState::getCurrentRound() const { return currentRound; }
 
-// Конструктор
 GameState::GameState()
     : col(2),
     row(2),
@@ -30,7 +29,6 @@ GameState::GameState()
     userShipManager(sizes.size(), sizes)
 {}
 
-// Конструктор
 GameState::GameState(int col, int row, const std::vector<int>& sizes)
     : col(col),
     row(row),
@@ -154,7 +152,6 @@ GameField& GameState::getUserGameField() { return userGameField; }
 
 
 void GameState::resetCompField() {
-    // Пересоздание поля и менеджера кораблей
     compGameField = GameField(col, row);
     compShipManager = ShipManager(sizes.size(), sizes);
 }
@@ -168,8 +165,6 @@ GameState GameState::from_json(const nlohmann::json& j) {
     state.userShipManager = ShipManager::from_json(j["userShipManager"]);
     state.compGameField = GameField::from_json(j["compGameField"]);
     state.userGameField = GameField::from_json(j["userGameField"]);
-    //state.compGameField.restoreConnection(state.compShipManager);
-    //state.userGameField.restoreConnection(state.userShipManager);
 
     int sizeAbilities = j["Abilities"].get<int>();
     while (sizeAbilities > 3) {

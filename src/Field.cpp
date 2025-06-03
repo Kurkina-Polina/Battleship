@@ -64,7 +64,6 @@ void  GameField::SetShipSegment(int x, int y, ShipSegment* segment) {
 }
 
 
-// дать статус клетки а зачем просто пишем поле[y][x].GetStatus()
 CellStatus GameField::GetStatus(int x, int y) {
     return Field[y][x].GetStatus();
 }
@@ -74,8 +73,6 @@ SegmentState GameField::GetSegmentState(int x, int y) {
     return (segment->GetState());
 }
  
- 
-//  онструктор копировани€
 GameField::GameField(const GameField& other) : row(other.row), col(other.col) {
     Field.resize(row, std::vector<Cell>(col));
     for (int i = 0; i < row; ++i) {
@@ -85,14 +82,12 @@ GameField::GameField(const GameField& other) : row(other.row), col(other.col) {
     }
 }
 
-//  онструктор перемещени€
 GameField::GameField(GameField&& other) noexcept
     : col(other.col), row(other.row), Field(std::move(other.Field)) {
     other.col = 0;
     other.row = 0;
 }
 
-// ќператор присваивани€ копированием
 GameField& GameField::operator=(const GameField& other) {
     if (this != &other) {
         col = other.col;
@@ -107,7 +102,6 @@ GameField& GameField::operator=(const GameField& other) {
     return *this;
 }
 
-// ќператор присваивани€ перемещением
 GameField& GameField::operator=(GameField&& other) noexcept {
     if (this != &other) {
         col = other.col;
@@ -134,9 +128,6 @@ bool GameField::IsValidLocation(int x, int y, int len, Orientation orientation) 
         throw ShipOutofbyY(x, y);
     }
    
-
-    //проверка на касание и пересечение с другими корабл€ми
-    //если корабль не с краю, то провер€ем соседние клетки, чтобы избежать касани€
     int min_j = std::max(0, x - 1);
     int min_i = std::max(0, y - 1);
     int max_j = std::min(col - 1, x + ((orientation == Orientation::Horizontal) ? len : 1));
@@ -154,19 +145,14 @@ bool GameField::IsValidLocation(int x, int y, int len, Orientation orientation) 
 }
 
 
-// дать x колво столбцов
 int GameField::GetRow() { return col; }
 
-// дать y колво строк
 int GameField::GetCol() { return row; }
 
-//добавить корабль на поле
 bool GameField::AddShip(int x, int y, Ship& ship, int IndexShip) {
     int len = ship.GetLength();
     Orientation orientation = ship.GetOrientation();
-    //проверка+обработка что перва€ координата корабл€ в рамках пол€
     ValidCoordinaties(x, y);
-    //проверка на выход корабл€ на пересечение и касание коралей
     IsValidLocation(x, y, len, orientation);
     for (int i = 0; i < len; i++) {
         int cur_x = x + (orientation == Orientation::Horizontal ? i : 0);
@@ -179,7 +165,6 @@ bool GameField::AddShip(int x, int y, Ship& ship, int IndexShip) {
 
 }
 
-//атака клетки возвращает тру если мы убили корабль иначе фалсе static 
 int GameField::Hit(int x, int y, bool FlagHit) {
     ValidCoordinaties(x, y);
     if (GetStatus(x, y) == CellStatus::Empty) {
@@ -190,11 +175,9 @@ int GameField::Hit(int x, int y, bool FlagHit) {
         SetCellStatus(x, y, CellStatus::Empty);
         return  -1;
     }
-    //рассматриваем сегмент
     ShipSegment* segment = Field[y][x].GetShipSegment();
     segment->Hit();
-    //проверка установлен ли флаг двойного удара
-    if (FlagHit) { //если установлен то бьем туда же € могу это вынести так, что вместо абилити манагер сразу флаг передавать, соответсвенно дл€ компа всегда будет фалсе
+    if (FlagHit) { 
         segment->Hit();
     }
 
@@ -203,7 +186,6 @@ int GameField::Hit(int x, int y, bool FlagHit) {
 
 }
 
-//нарисовать поле
 void GameField::PrintField() {
     for (int y = 0; y < row; y++) {
         for (int x = 0; x < col; x++) {
@@ -224,14 +206,12 @@ void GameField::PrintField() {
                 else {
                     std::cout << "0";
                 }
-                //1234567890
             }
         }
         std::cout << "\n";
     }
 }
 
-//нарисовать поле
 void GameField::PrintFieldComputer() {
     for (int y = 0; y < row; y++) {
         for (int x = 0; x < col; x++) {
@@ -252,7 +232,6 @@ void GameField::PrintFieldComputer() {
                 else {
                     std::cout << "0";
                 }
-                //1234567890
             }
         }
         std::cout << "\n";
@@ -268,7 +247,7 @@ nlohmann::json GameField::to_json() const {
     for (const auto& row : Field) {
         nlohmann::json jsonRow = nlohmann::json::array();
         for (const auto& cell : row) {
-            jsonRow.push_back(cell.to_json()); // ѕредполагаетс€, что у Cell есть метод to_json()
+            jsonRow.push_back(cell.to_json()); 
         }
         j["field"].push_back(jsonRow);
     }

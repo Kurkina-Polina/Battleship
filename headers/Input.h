@@ -23,7 +23,7 @@ enum Commands
 class Input
 {
 private:
-    Output output; //здесь и возникают ошибки
+    Output output;
     std::istream &inputStream;
     std::unordered_map<char, Commands> commands;
     std::unordered_map<char, Commands> shortCommands = {

@@ -10,17 +10,15 @@ bool Game::FindCoordinates() {
     int col = state.getCol();
     int row = state.getRow();
 
-    srand(time(0)); // Инициализация генератора случайных чисел
+    srand(time(0)); 
     for (int i = 0; i < state.getSizes().size(); i++) { // it should be func FindCoordinates()
 
         int rNum = rand();
 
-        //ориентация всегда горизонтальная, тк не напсано что у компа должна быть возможность поставить вертикально
+        int x = rNum % col, y = (rNum + rNum) % row, x_cur = x, y_cur = y;
 
-        int x = rNum % col, y = (rNum + rNum) % row, x_cur = x, y_cur = y;// рандомно задаем х у
-
-        bool FLadAddedShip = false; //поставим false когда найдем место для корабля
-        while (FLadAddedShip == false) { //проверяем что в эту клетку можно поставить корабль. Если нельзя, то просто ищем самую первую куда можно
+        bool FLadAddedShip = false;
+        while (FLadAddedShip == false) { 
             try
             {
                 FLadAddedShip = state.getCompGameField().AddShip(x_cur, y_cur, state.getCompShipManager().GetShip(i), i);
@@ -42,17 +40,17 @@ bool Game::FindCoordinates() {
                 if ((x_cur == x) && (y_cur == y)) {
 
                     return false;
-                    // в случае такой ошибки будет работать просто не добавив оставшиеся корабли. Возможно что нужен двойной цикл или вынести это в отдельную функцию и при неудаче начинать все сначала
+                    
                 }
 
             }
         }
-        //std::cout << "\n";
+        
     }
     return true;
 }
 
-void Game::SetFieldComputer() { // sizes массив размеров кораблей
+void Game::SetFieldComputer() { 
 
     while (FindCoordinates() == false) {
         state.resetCompField();
@@ -66,11 +64,11 @@ void Game::SetFieldUser() {
 
         outputManager->printString("Enter coordinates to  add ship (x y): ");
         std::vector<int> coordinates = input->inputCoordinates();
-        bool FLadAddedShip = false; //поставим false когда найдем место для корабля
+        bool FLadAddedShip = false; 
         while (!FLadAddedShip) {
             try
             {
-                FLadAddedShip = state.getUserGameField().AddShip(coordinates[0], coordinates[1], state.getUserShipManager().GetShip(i), i);//фалсе тк это флаг примененного двойного удара. у компа нет способностей поэтому всегда фалсе
+                FLadAddedShip = state.getUserGameField().AddShip(coordinates[0], coordinates[1], state.getUserShipManager().GetShip(i), i);
                 break;
             }
             catch (const std::exception& e)
@@ -87,13 +85,13 @@ void Game::SetFieldUser() {
 
 void Game::useAbility()
 {
-    //AbilityStatus abilityStatus;
+    
     try
     {
         bool isDestroyed;
         AbilityStatus newAbilityStatus;
         std::tie(isDestroyed, newAbilityStatus) = state.getUserAbilities().applyAbility(state.getCompGameField(), state.getCompShipManager());
-        //abilityStatus = newAbilityStatus;
+        
         outputManager->printAbilityResult(newAbilityStatus);
         if (isDestroyed)
         {
@@ -111,7 +109,7 @@ void Game::useAbility()
     outputManager->printString("Enemy field after your attack: \n");
     outputManager->printEnemyField(state.getCompGameField());
     checkEnd();
-    TurnUser(); //просто после применения способности сразу идет ход, чтобы нельзя было 2 раза применить сп-ть
+    TurnUser(); 
 
 }
 
@@ -152,21 +150,20 @@ void Game::TurnUser() {
 void Game::TurnComp() {
     int row = state.getRow();
     int col = state.getCol();
-    //теперь ход компьютера
-    srand(time(0)); // Инициализация генератора случайных чисел
+   
+    srand(time(0)); 
     int randomNum = rand();
     int X = randomNum % col, Y = randomNum * randomNum % row;
     int indShip = -1;
-    //bool ShipDied;
-    // делаем тк чтобы координаты были правильными
+    
     bool flag_hit = false;
     while (!flag_hit) {
         try
         {
             if ((state.getUserGameField().GetStatus(X, Y) == CellStatus::Ship) && (state.getUserGameField().GetSegmentState(X, Y) == SegmentState::Destroyed)) {
-                throw EmptyCell(X, Y); //не делаю это в самом хит, тк тогда нужно проверять много разных зависимостей. Так надежнее, хоть и выглядит так себе
+                throw EmptyCell(X, Y);
             }
-            indShip = state.getUserGameField().Hit(X, Y, false); //фалсе тк это флаг примененного двойного удара. у компа нет способностей поэтому всегда фалсе
+            indShip = state.getUserGameField().Hit(X, Y, false);
             flag_hit = true;
             break;
         }
@@ -200,10 +197,8 @@ void Game::TurnComp() {
 void Game::load() {
     try
     {
-        // Создаём объект InteractionWithFile, передавая имя файла
         InteractionWithFile fileManager("save.json");
 
-        // Загружаем состояние игры
         GameState state_new;
         state = fileManager.Loading(state);
 
@@ -215,7 +210,6 @@ void Game::load() {
         outputManager->printError("Failed to load the game: " + std::string(e.what()));
     }
 
-    // Печатаем поля после загрузки
     outputManager->printString("Field of a comp!\n");
     outputManager->printEnemyField(state.getCompGameField());
     outputManager->printString("Your Field\n");
@@ -227,10 +221,8 @@ void Game::load() {
 void Game::save() {
     try
     {
-        // Создаём объект InteractionWithFile, передавая имя файла
         InteractionWithFile fileManager("save.json");
 
-        // Сохраняем состояние игры
         if (fileManager.Saving(state)) {
             outputManager->printString("Game state saved successfully \n");
         }
@@ -280,7 +272,6 @@ void Game::Round() {
 
 }
 
-// начинает игровой цикл с раундами.
 void Game::beginGame() {
     outputManager->printString("Do you want to download the previous game? (y/n): ");
     std::string choice = input->inputString();
@@ -302,22 +293,21 @@ void Game::beginGame() {
         outputManager->printString("Starting a new game!\n");
 
         outputManager->printString("Type coloumns and rows\n");
-        std::vector<int> sizeOfField = input->inputCoordinates(); //проверку на корректный ввод
+        std::vector<int> sizeOfField = input->inputCoordinates(); 
 
         outputManager->printString("Type Count of Ships\n");
-        int countShips = input->inputNumber(); //проверку на корректный ввод
+        int countShips = input->inputNumber(); 
 
         std::vector<int> sizeOfShips;
         for (int i = 0; i < countShips; i++) {
             outputManager->printString("Type size of Ship \n");
-            sizeOfShips.push_back(input->inputNumber()); //проверку на корректный ввод
+            sizeOfShips.push_back(input->inputNumber()); 
         }
 
 
         state = GameState(sizeOfField[0], sizeOfField[1], sizeOfShips);
 
-        SetFieldUser(); //проверка на то загружали мы игру или нет
-        //SetFieldComputer();
+        SetFieldUser();
         Round();
     }
 

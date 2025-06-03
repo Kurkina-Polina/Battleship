@@ -51,14 +51,10 @@ Ship::Ship(int length_, Orientation orientation_ = Orientation::Horizontal) :
     segments.resize(length_, ShipSegment());
 }
 
-
-// получить длину
 int Ship::GetLength() const { return length; }
 
-//получить ориентацию
 Orientation Ship::GetOrientation() const { return orientation; }
 
-//получить состо€ние сегмента по его индексу
 SegmentState Ship::GetSegmentState(int index) const { return segments[index].GetState();
 }
 
@@ -66,7 +62,6 @@ ShipSegment* Ship::GetSegment(int index) {
     return &segments[index];
 }
 
-//существует ли корабль
 bool Ship::IsDestroid() const {
     for (auto state : segments) {
         if (state.GetState() != SegmentState::Destroyed) {
@@ -91,12 +86,10 @@ nlohmann::json Ship::to_json() const {
 }
 
 Ship  Ship::from_json(const nlohmann::json& j) {
-    // ѕроверка наличи€ необходимых полей
     if (!j.contains("segments") || !j.contains("orientation")) {
         throw std::invalid_argument("problem in fromjson in ship : /");
     }
 
-    // ѕроверка типа полей
     if (!j["segments"].is_array() || !j["orientation"].is_string()) {
         throw std::invalid_argument("problem in fromjson in ship : /");
     }

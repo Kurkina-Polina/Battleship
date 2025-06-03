@@ -12,18 +12,15 @@
 
 
 AbilityManager::AbilityManager() :input(nullptr), FlagHit(false){
-    // Создаем вектор с возможными способностями, чтобы из них рандомно выбирать
     std::vector<std::unique_ptr<Ability>> availableAbilities;
-    // Добавляем в вектор возможные способности
+
     availableAbilities.push_back(std::make_unique<DoubleHit>());
     availableAbilities.push_back(std::make_unique<Scanner>());
     availableAbilities.push_back(std::make_unique<Shelling>());
 
     std::mt19937 rng;
-    // Перемешиваем вектор с возможными способностями
     std::shuffle(availableAbilities.begin(), availableAbilities.end(), rng);
 
-    // Добавляем все способности в очередь
     for (auto& ability : availableAbilities) {
         abilities.push(std::move(ability));
     }
@@ -35,7 +32,7 @@ int AbilityManager::GetSize() const{
 
 void AbilityManager::getRandomAbility() {
     
-    srand(time(0)); // Инициализация генератора случайных чисел
+    srand(time(0)); 
     int randomIndex = rand()%3;
     std::vector<std::function<std::unique_ptr<Ability>()>> abilitiesFactory = {
         []() { return std::make_unique<DoubleHit>(); },
@@ -44,8 +41,6 @@ void AbilityManager::getRandomAbility() {
     };
 
     abilities.push(std::move(abilitiesFactory[randomIndex]()));
-    //abilities.push(std::move(availableAbilities[randomNum%3]));
-    //после того как мы пытаемся применить новую абилити возникает задержка и игра кончается
 }
 
 std::tuple<bool, AbilityStatus> AbilityManager::applyAbility(GameField& gameField, ShipManager& shipManager) {

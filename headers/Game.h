@@ -65,7 +65,6 @@ public:
 
     void Round();
 
-    // �������� ������� ���� � ��������.
     void beginGame();
 
 

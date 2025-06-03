@@ -1,19 +1,17 @@
-#include <vector>
 #include "Abilities.h"
+#include "AbilityMananger.h"
+#include "Input.h"
+#include <vector>
 #include <iostream>
 #include <random>
 #include <tuple>
-#include "AbilityMananger.h"
-#include "Input.h"
 
-// наносит двойной удар
 std::tuple<bool, AbilityStatus>  DoubleHit::apply(GameField& field, ShipManager& shipManager, AbilityManager& abilityManager){
 	abilityManager.SetFlag();
 	return {false, AbilityStatus::SUCCESS };
 	
 }
 
-// сканирует обласить 2х2 от выбранной точки и вправо вниз
 std::tuple<bool, AbilityStatus> Scanner::apply(GameField& field, ShipManager& shipManager, AbilityManager& abilityManager){
 	std::vector<int> coordinates =abilityManager.GetInput()->inputCoordinates();
 	field.ValidCoordinaties(coordinates[0], coordinates[1]);
@@ -41,19 +39,16 @@ std::tuple<bool, AbilityStatus> Scanner::apply(GameField& field, ShipManager& sh
 }
 
 
-//обстрел: наносит удар случайному сегменту случайного корябля. не меняет статус клетки
+
 std::tuple<bool, AbilityStatus> Shelling::apply(GameField& field, ShipManager& shipManager, AbilityManager& abilityManager){
-	//std::cout << "Shelling" << std::endl; 
 	int countShips = shipManager.GetShipCount();
 	srand(time(0));
 	int rNum = rand();
-	int indexShip = rNum%(countShips);  // generates number in the range 0...countShips-1
+	int indexShip = rNum%(countShips);  
 
 	int sizeShip = shipManager.GetShip(indexShip).GetLength();
-	int indexSegment = rNum%(sizeShip);  // generates number in the range 0...sizeShip-1
+	int indexSegment = rNum%(sizeShip);  
 
-
-	//проверяем что этот сегмент не уничтожен. Если уничтожен, то просто ищем самый первый не мертвый
 	while (shipManager.GetShip(indexShip).GetSegment(indexSegment)->GetState() == SegmentState::Destroyed) {
 		if (indexSegment + 1 < sizeShip) {
 			indexSegment += 1;
@@ -62,7 +57,6 @@ std::tuple<bool, AbilityStatus> Shelling::apply(GameField& field, ShipManager& s
 			indexShip += 1;
 			sizeShip = shipManager.GetShip(indexShip).GetLength();
 		}
-		//если нам сгенерирует самый последний сегмент, который при этом уничтоженный, то просто возьмем с самого начала самый первый  живой
 		else {
 			indexShip = 0;
 			sizeShip = shipManager.GetShip(indexShip).GetLength();

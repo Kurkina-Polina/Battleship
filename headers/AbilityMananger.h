@@ -16,23 +16,21 @@ class Input;
 class AbilityManager {
 private:
     std::queue<std::unique_ptr<Ability>> abilities;
-    bool FlagHit; //флаг того применена ли способность duble_hit
+    bool FlagHit; 
     Input* input;
 
 public:
     AbilityManager();
     ~AbilityManager() { delete input; }
 
-    // Запрет копирования
     AbilityManager(const AbilityManager&) = delete;
     AbilityManager& operator=(const AbilityManager&) = delete;
 
-    // Разрешение перемещения
     AbilityManager(AbilityManager&& other) noexcept
         : abilities(std::move(other.abilities)),
         FlagHit(other.FlagHit),
         input(other.input) {
-        other.input = nullptr; // Обнуление указателя у перемещённого объекта
+        other.input = nullptr; 
     }
 
     AbilityManager& operator=(AbilityManager&& other) noexcept {
@@ -40,7 +38,7 @@ public:
             abilities = std::move(other.abilities);
             FlagHit = other.FlagHit;
 
-            delete input; // Удаляем старый ресурс
+            delete input; 
             input = other.input;
             other.input = nullptr;
         }
@@ -57,8 +55,7 @@ public:
 
     bool GetFlag() {
         bool tmpFlag = FlagHit;
-        FlagHit = false; // состояние флага проверяется перед ударом. В хит я не могу удалить удар, тк не пердаю ссылку на манагаера сп-тей. Но в силу того, что если флаг возвращается тру, то после этого будет применена двойная аттака почти сразу
-        // исключений тут нет так что мы запрашиваем флаг и при этом у нас нет нужны его убрать. Поэтому будем сбрасывать флаг каждый раз после того как его запросили))
+        FlagHit = false; 
         return tmpFlag;
     }
 

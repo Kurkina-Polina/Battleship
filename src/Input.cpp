@@ -150,9 +150,7 @@ void Input::loadCommandsFromJson()
     nlohmann::json j;
     try
     {
-        //std::string jsonContent((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
-
-        //j = nlohmann::json::parse(jsonContent); // Парсим JSON из файла
+        
         nlohmann::json j;
         file >> j;
         commands.clear();

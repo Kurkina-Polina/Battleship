@@ -35,39 +35,37 @@ void OutputConsole::printField(GameField gameField, OutputStatus status)
         for (int x = 0; x < columns; ++x)
         {
             std::cout << "|";
-            CellStatus cellState = gameField.GetStatus(x, y); // Получаем состояние ячейки
+            CellStatus cellState = gameField.GetStatus(x, y); 
             SegmentState segmentState = SegmentState::Intact;
             if (cellState == CellStatus::Ship) {
                 segmentState = gameField.GetSegmentState(x, y);
             }
         
-              
-            //cellState == CellStatus::Ship &&
             if ((cellState == CellStatus::Unknown) || (status == OutputStatus::HIDDEN && segmentState == SegmentState::Intact))
             {
-                setColor(37, 40);   // Белый текст на черном фоне
+                setColor(37, 40);   
                 std::cout << "   ";
             }
             else if (cellState == CellStatus::Empty)
             {
-                setColor(32, 40); // Зеленый текст на черном фоне
+                setColor(32, 40); 
                 std::cout << " - ";
             }
             else
             {
                 if (segmentState == SegmentState::Damaged)
                 {
-                    setColor(33, 40); // Желтый текст на черном фоне
+                    setColor(33, 40); 
                     std::cout << " . ";
                 }
                 else if (segmentState == SegmentState::Destroyed)
                 {
-                    setColor(31, 40); // Красный текст на черном фоне
+                    setColor(31, 40);
                     std::cout << " x ";
                 }
                 else
                 {
-                    setColor(34, 40); // Синий текст на черном фоне
+                    setColor(34, 40); 
                     std::cout << " 0 ";
                 }
             }

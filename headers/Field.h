@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Ship.h"
 #include "ShipManager.h"
-class AbilityManager; //предварительное объявление чтобы мы могли добавить способность в hit
+class AbilityManager; 
 
 
 #include "json.hpp"
@@ -28,12 +28,8 @@ public:
     int GetIndSeg();
     int GetIndShip();
 
-    
-
-    //// Метод сериализации
     nlohmann::json to_json() const;
 
-    //// Метод десериализации
     static Cell from_json(const nlohmann::json& j);
 
 };
@@ -53,44 +49,24 @@ private:
 public:
     GameField(int col, int row);
 
-    // дать статус клетки
     CellStatus GetStatus(int x, int y);
 
-    //дфть статус сегмента в клетке
     SegmentState GetSegmentState(int x, int y);
-
-    // дать длину
     int GetRow();
-
-    // дать ширину
     int GetCol();
 
-    //проверка что такие координаты существуют
     bool ValidCoordinaties(int x, int y);
-    //проверка что в этой локации корабль не пересекает
     bool IsValidLocation(int x, int y, int len, Orientation orientation);
 
-    //конструктор копирования
     GameField(const GameField& other);
-
-    //конструктор перемещения
     GameField(GameField&& other) noexcept;
-
-    //оператор присваивания копированием
     GameField& operator=(const GameField& other);
-
-    // оператор присваивания перемещением
     GameField& operator=(GameField&& other) noexcept;
 
-    
-
-    //добавить корабль на поле
     bool AddShip(int x, int y, Ship& ship, int IndexShip);
 
-    //атака клетки
     int Hit(int x, int y, bool FlagHit);
 
-    //нарисовать поле
     void PrintField();
 
     void PrintFieldComputer();

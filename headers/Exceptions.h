@@ -4,7 +4,7 @@
 
 class NoAbilities : public std::exception {
 private:
-	mutable std::string msg;  // mutable, так как метод what() является const
+	mutable std::string msg;  
 public:
 	NoAbilities(){}
 	const char* what() const noexcept;
@@ -13,7 +13,7 @@ public:
 class InvalidLen : public std::exception {
 private:
 	int len;
-	mutable std::string msg;  // mutable, так как метод what() является const
+	mutable std::string msg;  
 public:
 	InvalidLen(int len_);
 	const char* what() const noexcept;
@@ -24,7 +24,7 @@ class OutofField : public std::exception {
 private:
 	int x;
 	int y;
-	mutable std::string msg;  // mutable, так как метод what() является const
+	mutable std::string msg;  
 public:
 	OutofField(int x, int y);
 	const char* what() const noexcept ;
@@ -34,7 +34,7 @@ public:
 class ShipOutofbyX : public std::exception {
 	int x;
 	int y;
-	mutable std::string msg;  // mutable, так как метод what() является const
+	mutable std::string msg;  
 public:
 	ShipOutofbyX(int x, int y);
 	const char* what() const noexcept;
@@ -43,7 +43,7 @@ public:
 class ShipOutofbyY : public std::exception {
 	int x;
 	int y;
-	mutable std::string msg;  // mutable, так как метод what() является const
+	mutable std::string msg;  
 public:
 	ShipOutofbyY(int x, int y);
 	const char* what() const noexcept;
@@ -53,7 +53,7 @@ public:
 class IntersectShip : public std::exception {
 	int x;
 	int y;
-	mutable std::string msg;  // mutable, так как метод what() является const
+	mutable std::string msg;  
 public:
 	IntersectShip(int x, int y);
 	const char* what() const noexcept;
@@ -62,7 +62,7 @@ public:
 class EmptyCell : public std::exception {
 	int x;
 	int y;
-	mutable std::string msg;  // mutable, так как метод what() является const
+	mutable std::string msg;  
 public:
 	EmptyCell(int x, int y);
 	const char* what() const noexcept;
